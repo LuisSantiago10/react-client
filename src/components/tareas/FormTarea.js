@@ -12,7 +12,7 @@ export const FormTarea = () => {
     })
 
     const tareasContext = useContext(TareaContext);
-    const { agregarTarea } = tareasContext;
+    const { errortarea,agregarTarea,validarTarea,obtenerTareas } = tareasContext;
 
     const { nombre } = tarea;
 
@@ -30,9 +30,21 @@ export const FormTarea = () => {
     const handleSubmit = e =>{
         e.preventDefault();
 
+        if (nombre.trim() === '') {
+            validarTarea();
+            return;
+        }
+
         tarea.proyectoId = proyectoActual.Id;
         tarea.estado = false;
         agregarTarea(tarea);
+
+        obtenerTareas(proyectoActual.Id);
+
+        setTarea({
+            nombre:''
+        })
+
     }
     return (
         <div className="formulario">
@@ -57,6 +69,10 @@ export const FormTarea = () => {
                     />
                 </div>
             </form>
+            { 
+                errortarea ? <p className="mensaje error">El nombre de la tarea es obligatorio</p>
+                : null
+            }
         </div>
     )
 }
